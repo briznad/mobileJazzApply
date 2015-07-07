@@ -18,6 +18,10 @@
         float: none;
         width: 100%;
       }
+
+      .form-container .label-text:before {
+        right: 0.75em;
+      }
     </style>
 
     <style media="only screen and (max-width: 550px)">
@@ -30,14 +34,14 @@
   <body>
     <h1><a href="http://mobilejazz.com/jobs">apply to Mobile Jazz</a></h1>
 
-    <form id="form" class="form-container" action="/apply" method="post">
+    <form class="form-container" action="/apply" method="post">
       <label for="contactName">
         <input id="contactName" name="name" type="text" required="" autofocus="">
         <span class="label-text">Name</span>
       </label>
 
       <label for="contactEmail">
-        <input id="contactEmail" type="email" required="">
+        <input id="contactEmail" name="email" type="email" required="">
         <span class="label-text">Email</span>
       </label>
 
@@ -47,8 +51,8 @@
       </label>
 
       <label for="contactUrls">
-        <textarea id="contactUrls" name="urls" rows="5" required=""></textarea>
-        <span class="label-text">Urls</span>
+        <textarea id="contactUrls" name="urls" rows="3" required=""></textarea>
+        <span class="label-text">Urls (1 per line)</span>
       </label>
 
       <input type="submit" value="Send">
@@ -58,8 +62,48 @@
       <p class="chromeframe" style="width: 100%; position: fixed; left: 0; top: auto; bottom: 0; z-index: 1; margin: 0; padding: 15px; text-align: center; background-color: #F0F0F0; font-size: 22px;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" style="text-decoration: underline;">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
     <script type="text/javascript">
-      //
+      $('form')
+        // respond to change event on inputs & textareas
+        .on('change', 'input, textarea', function() {
+          var $this = $(this);
+
+          if ($this.val() !== '') {
+            return $this.removeClass('deleted').addClass('changed');
+          } else {
+            return $this.removeClass('changed').addClass('deleted');
+          }
+        })
+        // intercept form submit
+        .on('submit', function(e) {
+          e.preventDefault();
+
+          var cleanData = {};
+
+          $.each($(this).serializeArray(), function(index, input) {
+            cleanData[input.name] = input.value;
+          });
+
+          // put urls into an array
+          cleanData.urls = cleanData.urls.replace(/ |\t/, '').split(/\n/);
+
+          // send it off
+          $.ajax({
+            type        : 'POST',
+            dataType    : 'json',
+            contentType : 'application/json',
+            url         : 'http://mobilejazz.com/jobs/apply',
+            data        : JSON.stringify(cleanData),
+            success     : function() {
+              location.assign('https://www.google.com/search?tbm=isch&q=kitties');
+            },
+            error       : function() {
+              location.assign('https://www.google.com/search?tbm=isch&q=taxes');
+            }
+          });
+        });
     </script>
   </body>
 </html>
