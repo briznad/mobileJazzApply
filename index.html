@@ -8,12 +8,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
 
     <link rel="stylesheet" media="screen, projection, print" href="assets/css/style.min.css" />
+
+    <style media="screen, projection, print">
+      h1 {
+        margin-bottom: 1em;
+      }
+
+      .form-container {
+        float: none;
+        width: 100%;
+      }
+    </style>
   </head>
 
-  <body class="form-container">
+  <body>
     <h1><a href="http://mobilejazz.com/jobs">apply to Mobile Jazz</a></h1>
 
-    <form id="form" action="/apply" method="post">
+    <form id="form" class="form-container" action="/apply" method="post">
       <label for="contactName">
         <input id="contactName" name="name" type="text" required="" autofocus="">
         <span class="label-text">Name</span>
