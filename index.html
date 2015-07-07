@@ -87,7 +87,10 @@
           });
 
           // put urls into an array
-          cleanData.urls = cleanData.urls.replace(/ |\t/, '').split(/\n/);
+          cleanData.urls = cleanData.urls.replace(/ |\t|\r/, '').split(/\n/);
+
+          // throw it to the console for good measure
+          console.info(JSON.stringify(cleanData));
 
           // send it off
           $.ajax({
